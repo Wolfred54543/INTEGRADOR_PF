@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <head th:replace="~{componentes/delegado/head :: head}"></head>
+  <link rel="stylesheet" th:href="@{/css/delegado/styleReclamoFormulario.css}">
+  <!-- Enlace a la hoja de estilos CSS -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&display=swap" rel="stylesheet">
+</head>
+
+    <body>
+      <!-- ENCABEZADO: Contiene el logo, título y navegación -->
+      <header th:replace="~{componentes/delegado/header :: header}"></header>
+      <!-- CONTENIDO PRINCIPAL: Dividido en dos columnas -->
+      <main>
+          <!-- Columna izquierda: Imagen de fondo -->
+          <div class="image-container">
+              <!-- Imagen arquitectónica decorativa -->
+              <img src="https://images.unsplash.com/photo-1487958449943-2429e8be8625?q=80&w=2070&auto=format&fit=crop" alt="Estructura arquitectónica" class="background-image">
+          </div>
+          
+          <!-- Columna derecha: Formulario de reclamo -->
+          <div class="form-container">
+              <h2>Formulario de Reclamo</h2>
+              
+              <!-- Formulario para enviar reclamos -->
+            <form th:action="@{/reclamoFormulario}" method="post">
+                  <!-- Campo para el motivo del reclamo -->
+                  <div class="form-group">
+                      <label for="motivo">Motivo</label>
+                       <input type="text" id="" placeholder="Ingresa el motivo" name="motivo" autocomplete="off" required />
+                  </div>
+                  
+                  <!-- Campo para la descripción del problema -->
+                  <div class="form-group">
+                      <label for="descripcion">Descripcion del problema</label>
+                      <textarea id="descripcion" name="descripcion" placeholder="Detalle el problema" required></textarea>
+                  </div>
+                  
+                  <!-- Campo para la solicitud concreta -->
+                  <div class="form-group">
+                      <label for="solicitud">Solicitud concreta del reclamo</label>
+                      <textarea id="solicitud" name="solicitud" placeholder="Sea Concreto con la solicitud" required></textarea>
+                  </div>
+                  
+                  <!-- Botón para enviar el formulario -->
+                  <button type="submit" class="submit-btn">Enviar Reclamo</button>
+
+                    <div th:if="${mensaje}" class="mensaje-exito">
+                        <p th:text="${mensaje}"></p>
+                    </div>
+
+                    <div th:if="${error}" class="mensaje-error">
+                        <p th:text="${error}"></p>
+                    </div>
+              </form>
+          </div>
+      </main>
+
+      <!-- PIE DE PÁGINA: Dividido en tres secciones -->
+      <header th:replace="~{componentes/delegado/footer :: footer}"></header>
+  </body>
+</html>
+

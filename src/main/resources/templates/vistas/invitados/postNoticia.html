@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <head th:replace="~{componentes/invitado/head :: head}"></head>
+    <link rel="stylesheet" th:href="@{/css/invitado/styleNoticias.css}">
+    <link rel="stylesheet" th:href="@{/css/invitado/stylePostNoticia.css}">
+</head>
+<body>
+
+<header th:replace="~{componentes/invitado/header :: header}"></header>
+
+<div class="presentation-container">
+
+    <div class="presentation-header">
+        <h1 th:text="${noticia.notTitulo}">Título de la Noticia</h1>
+        <p th:text="${noticia.notSubtitulo}">Subtítulo de la Noticia</p>
+        <p class="autor-fecha"
+            th:text="${noticia.notFechaCreacion != null ? #dates.format(noticia.notFechaCreacion, 'dd MMMM yyyy') : 'Sin fecha'}">
+        </p>
+    </div>
+
+    <div class="portada">
+        <img class="portada-img" th:src="@{/imagenes/administrador/imgNoticias/{img}(img=${noticia.notImagen})}" alt="Imagen de la noticia">
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="quote-section">
+        <p class="quote" th:text="${noticia.notDescripcion}">Descripción o contenido de la noticia</p>
+       <p class="quote-author" 
+        th:text="${noticia.notAutor != null ? noticia.notAutor : 'Anónimo'}">Autor de la Noticia</p>
+      </p>
+    </div>
+
+</div>
+
+<footer>
+    <div class="footer-content">
+        <p>© 2023 Company Name, Inc. All rights reserved.</p>
+        <nav>
+            <a href="#">Privacidad</a>
+            <a href="#">Soporte</a>
+        </nav>
+        <div class="redes">
+            <a href="#"><img src="../youtube_logo.png" alt="YouTube"/></a>
+            <a href="#"><img src="../facebook_logo.png" alt="Facebook"/></a>
+            <a href="#"><img src="../instagram_logo.png" alt="Instagram"/></a>
+            <a href="#"><img src="../linkedin_logo.png" alt="LinkedIn"/></a>
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>

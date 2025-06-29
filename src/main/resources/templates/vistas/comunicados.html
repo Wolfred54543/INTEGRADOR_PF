@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administrar Comunicados - Deportes FAP</title>
+     <head th:replace="~{componentes/head :: head}"></head>
+     <link rel="stylesheet" th:href="@{/css/administrador/comunicados.css}">
+</head>
+<body>
+    <!-- Encabezado -->
+    <header th:replace="~{componentes/header :: header}"></header>
+    <!-- Contenido principal -->
+    <div class="page-header">
+        <h1 class="page-title">Administrar Comunicados</h1>
+        <p class="page-subtitle">Crear, editar y gestionar comunicados oficiales</p>
+    </div>
+
+    <main class="container">
+        <div class="form-section">
+            <h2 class="section-title">Crear Nuevo Comunicado</h2>
+            
+            <div id="alert-container"></div>
+
+            <form id="comunicado-form">
+                <div class="form-group">
+                    <label class="form-label" for="tipo">Tipo de Comunicado</label>
+                    <select class="form-select" id="tipo" required>
+                        <option value="">Seleccionar tipo</option>
+                        <option value="oficial">Oficial</option>
+                        <option value="informativo">Informativo</option>
+                        <option value="urgente">Urgente</option>
+                        <option value="convocatoria">Convocatoria</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="titulo">Título del Comunicado</label>
+                    <input type="text" class="form-input" id="titulo" placeholder="Ingrese el título del comunicado" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="fecha">Fecha de Publicación</label>
+                    <input type="date" class="form-input" id="fecha" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="contenido">Contenido del Comunicado</label>
+                    <textarea class="form-textarea" id="contenido" placeholder="Escriba el contenido completo del comunicado..." required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Adjuntar Documento (Opcional)</label>
+                    <div class="file-upload" onclick="document.getElementById('archivo').click()">
+                        <input type="file" id="archivo" style="display: none;" accept=".pdf,.doc,.docx">
+                        <div class="file-upload-text">
+                            📎 Haga clic para seleccionar un archivo<br>
+                            <small>Formatos permitidos: PDF, DOC, DOCX</small>
+                        </div>
+                    </div>
+                    <div id="file-name" style="margin-top: 10px; font-size: 14px; color: #666;"></div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="estado">Estado</label>
+                    <select class="form-select" id="estado" required>
+                        <option value="borrador">Borrador</option>
+                        <option value="publicado">Publicar Inmediatamente</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn-primary">Crear Comunicado</button>
+            </form>
+        </div>
+
+        <div class="comunicados-list">
+            <h2 class="section-title">Comunicados Existentes</h2>
+            
+            <div class="comunicado-item">
+                <div class="comunicado-header">
+                    <div class="comunicado-info">
+                        <div class="comunicado-title">Suspensión temporal de entrenamientos</div>
+                        <div class="comunicado-meta">
+                            <span class="status-badge status-published">Publicado</span>
+                            📅 30 Mayo 2025 | Tipo: Oficial
+                        </div>
+                    </div>
+                </div>
+                <div class="comunicado-preview">
+                    Debido a las condiciones meteorológicas adversas previstas para los próximos días, la dirección del club ha decidido suspender temporalmente...
+                </div>
+                <div class="comunicado-actions">
+                    <button class="btn-secondary" onclick="editarComunicado(1)">✏️ Editar</button>
+                    <button class="btn-danger" onclick="eliminarComunicado(1)">🗑️ Eliminar</button>
+                </div>
+            </div>
+
+            <div class="comunicado-item">
+                <div class="comunicado-header">
+                    <div class="comunicado-info">
+                        <div class="comunicado-title">Renovación del contrato del entrenador principal</div>
+                        <div class="comunicado-meta">
+                            <span class="status-badge status-published">Publicado</span>
+                            📅 28 Mayo 2025 | Tipo: Oficial
+                        </div>
+                    </div>
+                </div>
+                <div class="comunicado-preview">
+                    El Club Deportes FAP se complace en anunciar la renovación del contrato del entrenador principal, Carlos Mendoza...
+                </div>
+                <div class="comunicado-actions">
+                    <button class="btn-secondary" onclick="editarComunicado(2)">✏️ Editar</button>
+                    <button class="btn-danger" onclick="eliminarComunicado(2)">🗑️ Eliminar</button>
+                </div>
+            </div>
+
+            <div class="comunicado-item">
+                <div class="comunicado-header">
+                    <div class="comunicado-info">
+                        <div class="comunicado-title">Nuevos horarios de atención al socio</div>
+                        <div class="comunicado-meta">
+                            <span class="status-badge status-draft">Borrador</span>
+                            📅 25 Mayo 2025 | Tipo: Informativo
+                        </div>
+                    </div>
+                </div>
+                <div class="comunicado-preview">
+                    A partir del 1 de junio, las oficinas de atención al socio tendrán nuevos horarios de atención...
+                </div>
+                <div class="comunicado-actions">
+                    <button class="btn-secondary" onclick="editarComunicado(3)">✏️ Editar</button>
+                    <button class="btn-secondary" onclick="publicarComunicado(3)">📢 Publicar</button>
+                    <button class="btn-danger" onclick="eliminarComunicado(3)">🗑️ Eliminar</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Establecer fecha actual por defecto
+        document.getElementById('fecha').valueAsDate = new Date();
+
+        // Manejar selección de archivo
+        document.getElementById('archivo').addEventListener('change', function(e) {
+            const fileName = e.target.files[0]?.name;
+            const fileNameDiv = document.getElementById('file-name');
+            if (fileName) {
+                fileNameDiv.textContent = `Archivo seleccionado: ${fileName}`;
+                fileNameDiv.style.color = '#28a745';
+            } else {
+                fileNameDiv.textContent = '';
+            }
+        });
+
+        // Manejar envío del formulario
+        document.getElementById('comunicado-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = {
+                tipo: document.getElementById('tipo').value,
+                titulo: document.getElementById('titulo').value,
+                fecha: document.getElementById('fecha').value,
+                contenido: document.getElementById('contenido').value,
+                estado: document.getElementById('estado').value,
+                archivo: document.getElementById('archivo').files[0]?.name || null
+            };
+
+            // Simular creación del comunicado
+            mostrarAlerta('success', '✅ Comunicado creado exitosamente');
+            
+            // Limpiar formulario
+            document.getElementById('comunicado-form').reset();
+            document.getElementById('file-name').textContent = '';
+            document.getElementById('fecha').valueAsDate = new Date();
+            
+            console.log('Comunicado creado:', formData);
+        });
+
+        function mostrarAlerta(tipo, mensaje) {
+            const container = document.getElementById('alert-container');
+            const alertClass = tipo === 'success' ? 'alert-success' : 'alert-error';
+            
+            container.innerHTML = `
+                <div class="alert ${alertClass}">
+                    ${mensaje}
+                </div>
+            `;
+            
+            // Ocultar alerta después de 5 segundos
+            setTimeout(() => {
+                container.innerHTML = '';
+            }, 5000);
+        }
+
+        function editarComunicado(id) {
+            mostrarAlerta('success', `📝 Editando comunicado #${id}`);
+            // Aquí iría la lógica para cargar los datos en el formulario
+        }
+
+        function eliminarComunicado(id) {
+            if (confirm('¿Está seguro de que desea eliminar este comunicado?')) {
+                mostrarAlerta('success', `🗑️ Comunicado #${id} eliminado`);
+                // Aquí iría la lógica para eliminar el comunicado
+            }
+        }
+
+        function publicarComunicado(id) {
+            if (confirm('¿Desea publicar este comunicado?')) {
+                mostrarAlerta('success', `📢 Comunicado #${id} publicado`);
+                // Aquí iría la lógica para cambiar el estado a publicado
+            }
+        }
+    </script>
+</body>
+</html>
